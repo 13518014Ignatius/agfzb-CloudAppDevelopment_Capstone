@@ -1,11 +1,11 @@
   applications:
-  - name: djangoapp
+  - name: fsdevcaps1
     routes:
-      - route: $HOST.$DOMAIN
+      - route: fsdevcaps1.au-syd.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: fsdevcaps1-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: fsdevcaps1.au-syd.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack
