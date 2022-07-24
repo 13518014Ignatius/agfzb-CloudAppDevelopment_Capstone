@@ -21,26 +21,37 @@
             <div class="navbar-header">
                   <a class="navbar-brand text-white" href="#">Dealership Review</a>
             </div>
-            <ul class="navbar navbar-nav navbar-right">
-                <li>
-                    <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
-                        {% csrf_token %}
-                        <div class="input-group">
-                             <input type="text" class="form-control" placeholder="Username" name="username" >
-                             <input type="password" class="form-control" placeholder="Password" name="psw" >
-                             <button class="btn btn-primary" type="submit">Login</button>
-                             <a class="btn btn-link" href="{% url 'onlinecourse:registration' %}">Sign Up</a>
+            {% if user.is_authenticated %}
+                <div class="rightalign">
+                    <div class="dropdown">
+                        <p style="color:white;">{{user.first_name}}</p>
+                        <div class="dropdown-content">
+                            <a href="{% url 'djangoapp:logout' %}">Logout</a>
                         </div>
-                     </form>
-                    <a class="btn btn-link btn-outline-light text-white" href="{% url 'djangoapp:about' %}">About Us</a>
-                </li>
-            </ul>
-        </div>
+                    </div>
+                </div>
+            {% else %}
+                <ul class="navbar navbar-nav navbar-right">
+                    <li>
+                        <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Username" name="username" >
+                                <input type="password" class="form-control" placeholder="Password" name="psw" >
+                                <button class="btn btn-primary" type="submit">Login</button>
+                                <a class="btn btn-link" href="{% url 'djangoapp:signup' %}">Sign Up</a>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            {% endif %}
+            </div>
 
     </nav>
     <!--Add a dealer table here -->
 
     <footer class="bg-dark text-center">
+        <a class="text-white" href="{% url 'djangoapp:about' %}">About Us</a>
         <a class="text-white" href="{% url 'djangoapp:contact_us' %}">Contact Us</a>
     </footer>
     </body>

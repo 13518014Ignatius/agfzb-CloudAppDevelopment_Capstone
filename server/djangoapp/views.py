@@ -40,7 +40,7 @@ def login_request(request):
         if user is not None:
             #If user exists
             login(request, user)
-            return redirect('djangoapp:get_dealerships')
+            return redirect('djangoapp:index')
         else:
             return render(request, 'djangoapp/index.html', context)
         
@@ -48,7 +48,7 @@ def login_request(request):
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
     logout(request)
-    return redirect('djangoapp:get_dealerships')
+    return redirect('djangoapp:index')
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
@@ -70,7 +70,7 @@ def registration_request(request):
             user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, password=password)
             user.save()
             login(request, user)
-            return redirect("djangoapp:get_dealerships")
+            return redirect("djangoapp:index")
         else:
             return render(request, "djangoapp/registration.html", context)
 
