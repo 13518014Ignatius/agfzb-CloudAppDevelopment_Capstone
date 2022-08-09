@@ -88,14 +88,14 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-'''def get_dealer_details(request, dealer_id):
+def get_dealer_details(request, dealer_id):
 # ...
     context = {}
     if request.method == "GET":
         url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         review_names = ' '.join([review.name for review in reviews])
-        return HttpResponse(review_names)'''
+        return HttpResponse(review_names)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
