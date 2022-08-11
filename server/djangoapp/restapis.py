@@ -14,7 +14,7 @@ def get_request(url, **kwargs):
     try:
         # Call get method of requests library with URL and parameters
         response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs)
+                                params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -66,15 +66,15 @@ def get_dealer_reviews_from_cf(url, dealerId):
             # Get its content in `doc` object
             dealer_doc = dealers["message"][i]
             # Create a CarDealer object with values in `doc` object
-            review_obj = DealerReview(dealership=dealer_doc["doc"]["dealership"], name=dealer_doc["doc"]["name"], purchase=dealer_doc["doc"]["purchase"], review=dealer_doc["doc"]["review"], purchase_date=dealer_doc["doc"]["purchase_date"], car_make=dealer_doc["doc"]["car_make"], car_model=dealer_doc["doc"]["car_model"], car_year=dealer_doc["doc"]["car_year"], sentiment="positive", dealerId=dealers["idList"][i])
+            review_obj = DealerReview(dealership=dealer_doc["doc"]["dealership"], name=dealer_doc["doc"]["name"], purchase=dealer_doc["doc"]["purchase"], review=dealer_doc["doc"]["review"], purchase_date=dealer_doc["doc"]["purchase_date"], car_make=dealer_doc["doc"]["car_make"], car_model=dealer_doc["doc"]["car_model"], car_year=dealer_doc["doc"]["car_year"], sentiment=analyze_review_sentiments(dealer_doc["doc"]["review"]), dealerId=dealers["idList"][i])
             results.append(review_obj)
 
     return results
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
+def analyze_review_sentiments(dealerreview):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-
-
-
+    analyzer_url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/sentiment'
+    json_result = get_request(analyzer_url, text=dealerreview)
+    return json_result["sentiment"]["document"]["label"]

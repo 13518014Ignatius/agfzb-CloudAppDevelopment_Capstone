@@ -93,8 +93,8 @@ def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
-        review_names = ' '.join([review.name for review in reviews])
-        return HttpResponse(review_names)
+        review_print = ' '.join([(review.name + ": " + review.sentiment) for review in reviews])
+        return HttpResponse(review_print)
 
 
 # Create a `add_review` view to submit a review
