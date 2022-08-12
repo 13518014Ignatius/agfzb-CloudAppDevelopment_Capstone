@@ -98,6 +98,23 @@ def get_dealer_details(request, dealer_id):
 
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
+def add_review(request, dealer_id):
 # ...
+    post_url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
+    if (request.user.is_authenticated):
+        review = {}
+        review["time"] = datetime.utcnow().isoformat()
+        review["dealership"] = dealer_id
+        review["review"] = "This is a great car dealer"
+        review["name"] = "Dummy Reviewer"
+        review["purchase"] = True
+        review["another"] = "field"
+        review["purchase_date"]
+        review["car_make"] = "Honda"
+        review["car_model"] = "Civic"
+        review["car_year"] = "2022"
 
+        json_payload = {}
+        json_payload["review"] = review
+
+    return HttpResponse(post_request(post_url, json_payload, dealer_id))

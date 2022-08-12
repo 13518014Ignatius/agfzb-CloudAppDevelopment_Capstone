@@ -25,6 +25,17 @@ def get_request(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
+def post_request(url, json_payload, **kwargs):
+    try:
+        # Try to call post method
+        response = requests.post(url, params=kwargs, json=json_payload)
+    except:
+        print("Network exception occurred")
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
+    
 
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
@@ -62,11 +73,11 @@ def get_dealer_reviews_from_cf(url, dealerId):
         # Get the row list in JSON as dealers
         dealers = json_result
         # For each dealer object
-        for i in range(len(dealers["message"])):
+        for dealer in dealers["message"]:
             # Get its content in `doc` object
-            dealer_doc = dealers["message"][i]
+            dealer_doc = dealer
             # Create a CarDealer object with values in `doc` object
-            review_obj = DealerReview(dealership=dealer_doc["doc"]["dealership"], name=dealer_doc["doc"]["name"], purchase=dealer_doc["doc"]["purchase"], review=dealer_doc["doc"]["review"], purchase_date=dealer_doc["doc"]["purchase_date"], car_make=dealer_doc["doc"]["car_make"], car_model=dealer_doc["doc"]["car_model"], car_year=dealer_doc["doc"]["car_year"], sentiment=analyze_review_sentiments(dealer_doc["doc"]["review"]), dealerId=dealers["idList"][i])
+            review_obj = DealerReview(dealership=dealer_doc["doc"]["dealership"], name=dealer_doc["doc"]["name"], purchase=dealer_doc["doc"]["purchase"], review=dealer_doc["doc"]["review"], purchase_date=dealer_doc["doc"]["purchase_date"], car_make=dealer_doc["doc"]["car_make"], car_model=dealer_doc["doc"]["car_model"], car_year=dealer_doc["doc"]["car_year"], sentiment=analyze_review_sentiments(dealer_doc["doc"]["review"]), dealerId=dealerId)
             results.append(review_obj)
 
     return results
