@@ -103,22 +103,23 @@ def add_review(request, dealer_id):
     post_url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
     if (request.user.is_authenticated):
         if (request.method == "GET"):
-            review_list = get_dealer_reviews_from_cf(url, dealer_id)
-            
+            cars = CarModel.objects.get(dealer_id=dealer_id)
+            context["cars"] = cars
+            return render(request, 'djangoapp/add_review.html', context)
         elif (request.method == "POST"):    
             review = {}
             review["time"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
-            review["review"] = "This is a great car dealer"
+            review["review"] = request.POST("content")
             review["name"] = "Dummy Reviewer"
-            review["purchase"] = True
+            review["purchase"] = request.POST("purchasecheck")
             review["another"] = "field"
-            review["purchase_date"]
-            review["car_make"] = "Honda"
+            review["purchase_date"] = 
+            review["car_make"] = request.POST("car")
             review["car_model"] = "Civic"
             review["car_year"] = "2022"
 
             json_payload = {}
             json_payload["review"] = review
-
-        return HttpResponse(post_request(post_url, json_payload, dealer_id))
+            response = post_request(post_url, json_payload, dealer_id)
+            print(response.status_code())
