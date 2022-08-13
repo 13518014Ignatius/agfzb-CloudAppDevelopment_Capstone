@@ -81,40 +81,44 @@ def get_dealerships(request):
         url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/dealership'
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
-        # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        # Put dealerships into context
+        context["dealership_list"] = dealerships
+        return render(request, 'djangoapp/index.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
 # ...
     context = {}
-    if request.method == "GET":
+    if (request.method == "GET"):
         url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
-        reviews = get_dealer_reviews_from_cf(url, dealer_id)
-        review_print = ' '.join([(review.name + ": " + review.sentiment) for review in reviews])
-        return HttpResponse(review_print)
+        review_list = get_dealer_reviews_from_cf(url, dealer_id)
+        context["review_list"] = review_list
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
 # ...
+    context = {}
     post_url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
     if (request.user.is_authenticated):
-        review = {}
-        review["time"] = datetime.utcnow().isoformat()
-        review["dealership"] = dealer_id
-        review["review"] = "This is a great car dealer"
-        review["name"] = "Dummy Reviewer"
-        review["purchase"] = True
-        review["another"] = "field"
-        review["purchase_date"]
-        review["car_make"] = "Honda"
-        review["car_model"] = "Civic"
-        review["car_year"] = "2022"
+        if (request.method == "GET"):
+            review_list = get_dealer_reviews_from_cf(url, dealer_id)
+            
+        elif (request.method == "POST"):    
+            review = {}
+            review["time"] = datetime.utcnow().isoformat()
+            review["dealership"] = dealer_id
+            review["review"] = "This is a great car dealer"
+            review["name"] = "Dummy Reviewer"
+            review["purchase"] = True
+            review["another"] = "field"
+            review["purchase_date"]
+            review["car_make"] = "Honda"
+            review["car_model"] = "Civic"
+            review["car_year"] = "2022"
 
-        json_payload = {}
-        json_payload["review"] = review
+            json_payload = {}
+            json_payload["review"] = review
 
-    return HttpResponse(post_request(post_url, json_payload, dealer_id))
+        return HttpResponse(post_request(post_url, json_payload, dealer_id))
