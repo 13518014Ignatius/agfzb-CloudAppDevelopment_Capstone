@@ -93,6 +93,7 @@ def get_dealer_details(request, dealer_id):
         url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
         review_list = get_dealer_reviews_from_cf(url, dealer_id)
         context["review_list"] = review_list
+        context["dealer_id"] = dealer_id
         return render(request, 'djangoapp/dealer_details.html', context)
 
 
@@ -103,23 +104,24 @@ def add_review(request, dealer_id):
     post_url = 'https://8118a41b.au-syd.apigw.appdomain.cloud/backend-process/api/review'
     if (request.user.is_authenticated):
         if (request.method == "GET"):
-            cars = CarModel.objects.get(dealer_id=dealer_id)
+            cars = CarModel.objects.filter(dealer_id=dealer_id)
             context["cars"] = cars
             return render(request, 'djangoapp/add_review.html', context)
         elif (request.method == "POST"):    
             review = {}
             review["time"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
-            review["review"] = request.POST("content")
-            review["name"] = "Dummy Reviewer"
-            review["purchase"] = request.POST("purchasecheck")
+            review["review"] = request.POST["content"]
+            review["name"] = request.POST["reviewername"]
+            review["purchase"] = request.POST["purchasecheck"]
             review["another"] = "field"
-            review["purchase_date"] = 
-            review["car_make"] = request.POST("car")
-            review["car_model"] = "Civic"
-            review["car_year"] = "2022"
+            review["purchase_date"] = datetime.utcnow().strftime("%Y")
+            car_purchased = get_object_or_404(CarModel, pk=request.POST["car"])
+            review["car_make"] = car_purchased.car_make.name
+            review["car_model"] = car_purchased.name
+            review["car_year"] = car_purchased.year
 
             json_payload = {}
             json_payload["review"] = review
             response = post_request(post_url, json_payload, dealer_id)
-            print(response.status_code())
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)

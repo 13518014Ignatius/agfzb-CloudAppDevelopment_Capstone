@@ -21,7 +21,7 @@
                         <p style="color:white;">{{user.first_name}}</p>
                         <div class="dropdown-content">
                             <a href="{% url 'djangoapp:logout' %}">Logout</a>
-                            <a href="{% url 'djangoapp:add_review' %}">Add Review</a>
+                            <a href="{% url 'djangoapp:add_review' dealer_id %}">Add Review</a>
                         </div>
                     </div>
                 </div>
@@ -59,6 +59,7 @@
                         <div class="card-text">{{review.review}}</div>
                     </div>
                 </div>
+            {% endfor %}
     </body>
 
 </html>

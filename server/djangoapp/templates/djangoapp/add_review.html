@@ -15,15 +15,16 @@
         <form class="form-inline" action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
             {% csrf_token %}
             <div class="input-group">
+                <input type="hidden" id="reviewername" name="reviewername" value="{{user.first_name}} {{user.last_name}}">
                 <label for="content"><b>Enter the review content:</b></label></br>
                 <textarea class="form-control" id="content" name="content" rows="2" placeholder="This is a great car dealer" required></textarea>
                 <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
-                <label for="purchasecheck">Has purchased the car from Sub-Ex Car Dealership ?</label>
+                <label for="purchasecheck">Has purchased the car from Sub-Ex Car Dealership ? <span>(select purchased car information below if checked)</span></label>
                 <label for="car">Select your car (model-make-year):</label>
                 <div class="dropdown">
                     <select name="car" id="car" class="form-select" required>
                         {% for car in cars %}
-                            <option selected value={{car.id}}>{{car.name}}-{{car.car_make.name}}-{{car.year|date:"Y"}}</option>
+                            <option value={{car.id}}>{{car.name}}-{{car.car_make.name}}-{{car.year|date:"Y"}}</option>
                         {% endfor %}
                     </select>
                 </div>
