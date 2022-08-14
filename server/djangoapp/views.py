@@ -106,6 +106,7 @@ def add_review(request, dealer_id):
         if (request.method == "GET"):
             cars = CarModel.objects.filter(dealer_id=dealer_id)
             context["cars"] = cars
+            context["dealer_id"] = dealer_id
             return render(request, 'djangoapp/add_review.html', context)
         elif (request.method == "POST"):    
             review = {}

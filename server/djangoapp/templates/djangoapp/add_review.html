@@ -13,24 +13,25 @@
     <body>
     <!--Add review form here -->
         <form class="form-inline" action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
+            <div class="container">
             {% csrf_token %}
-            <div class="input-group">
-                <input type="hidden" id="reviewername" name="reviewername" value="{{user.first_name}} {{user.last_name}}">
-                <label for="content"><b>Enter the review content:</b></label></br>
-                <textarea class="form-control" id="content" name="content" rows="2" placeholder="This is a great car dealer" required></textarea>
-                <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
-                <label for="purchasecheck">Has purchased the car from Sub-Ex Car Dealership ? <span>(select purchased car information below if checked)</span></label>
-                <label for="car">Select your car (model-make-year):</label>
-                <div class="dropdown">
-                    <select name="car" id="car" class="form-select" required>
-                        {% for car in cars %}
-                            <option value={{car.id}}>{{car.name}}-{{car.car_make.name}}-{{car.year|date:"Y"}}</option>
-                        {% endfor %}
-                    </select>
+                <div>
+                    <input type="hidden" id="reviewername" name="reviewername" value="{{user.first_name}} {{user.last_name}}">
+                    <h6><b>Enter the review content:</b></h6>
+                    <textarea class="form-control" id="content" name="content" rows="2" placeholder="This is a great car dealer" required></textarea><br>
+                    <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">Has purchased the car from Sub-Ex Car Dealership ? <span>(select purchased car information below if checked)</span></input>
+                    <h6><b>Select your car (model-make-year):</b></h6>
+                    <div class="dropdown">
+                        <select name="car" id="car" class="form-select" required>
+                            {% for car in cars %}
+                                <option value={{car.id}}>{{car.name}}-{{car.car_make.name}}-{{car.year|date:"Y"}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <h6><b>Select your purchase date:</b></label></h6>
+                    <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate"><br>
+                    <button class="btn btn-primary" type="submit">Submit</button>
                 </div>
-                <label for="purchasedate"><b>Select your purchase date:</b></label></br>
-                <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
-                <button class="btn btn-primary" type="submit">Submit</button>
             </div>
         </form>
     </body>
