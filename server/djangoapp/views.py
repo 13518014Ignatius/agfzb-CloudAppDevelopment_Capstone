@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import CarMake, CarModel, CarDealer, DealerReview
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -110,19 +110,16 @@ def add_review(request, dealer_id):
             return render(request, 'djangoapp/add_review.html', context)
         elif (request.method == "POST"):    
             review = {}
-            review["time"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
             review["review"] = request.POST["content"]
             review["name"] = request.POST["reviewername"]
             review["purchase"] = request.POST["purchasecheck"]
-            review["another"] = "field"
-            review["purchase_date"] = datetime.utcnow().strftime("%Y")
+            review["purchase_date"] = datetime.strptime(request.POST["purchasedate"], "%d-%m-%Y").isoformat()
             car_purchased = get_object_or_404(CarModel, pk=request.POST["car"])
             review["car_make"] = car_purchased.car_make.name
             review["car_model"] = car_purchased.name
-            review["car_year"] = car_purchased.year
+            review["car_year"] = int(car_purchased.year.strftime("%Y"))
 
-            json_payload = {}
-            json_payload["review"] = review
-            response = post_request(post_url, json_payload, dealer_id)
+            json_payload = { 'review' : review }
+            json_result = post_request(post_url, json_payload=json_payload)
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
